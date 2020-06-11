@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private TabAccessorAdapter mTabAccessorAdapter;
     private FirebaseUser currentUser;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         mToolbar=findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Whats App");
+        mAuth=FirebaseAuth.getInstance();
+        currentUser=mAuth.getCurrentUser();
 
         mViewPager=findViewById(R.id.main_tabs_pager);
         mTabAccessorAdapter=new TabAccessorAdapter(getSupportFragmentManager());
