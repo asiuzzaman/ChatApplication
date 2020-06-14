@@ -1,5 +1,6 @@
 package com.example.chatapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -7,6 +8,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,5 +56,33 @@ public class MainActivity extends AppCompatActivity {
     private void SendUserToLoginActivity() {
         Log.d(TAG,"SendUserToLoginActivity");
         startActivity(new Intent(MainActivity.this,LoginActivity.class));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.option_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+         switch (item.getItemId()){
+             case R.id.main_find_friends_option:{
+
+             }
+             case R.id.main_logout_option:{
+                    mAuth.signOut();
+                    SendUserToLoginActivity();
+             }
+             case R.id.main_settings_option:{
+
+             }
+             default:
+                 break;
+
+         }
+        return true;
     }
 }
