@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private Button loginButton,phoneLoginButton;
     private EditText UserEmail,UserPassword;
@@ -32,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth= FirebaseAuth.getInstance();
-        currentUser=mAuth.getCurrentUser();
 
         InitializeFields();
         NeedNewAccountLink.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(LoginActivity.this,"Login successfull",Toast.LENGTH_SHORT).show();
-                        SendToTheMainActivity();
+                        SendUserToTheMainActivity();
                         loginLoading.dismiss();
                     }else{
                         String Error=task.getException().toString();
@@ -91,16 +89,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (currentUser!=null){
-            SendToTheMainActivity();
-        }
-    }
-
-    private void SendToTheMainActivity() {
-        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+    private void SendUserToTheMainActivity() {
+        Intent mainIntent=new Intent(LoginActivity.this,MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
     }
     private void SendUserToTheRegisterActivity(){
         startActivity(new Intent(LoginActivity.this,RegisterActivity.class));

@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -25,12 +27,13 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView alreadyAccount;
     private FirebaseAuth mAuth;
     private ProgressDialog loadingBar;
+    private DatabaseReference rootReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth=FirebaseAuth.getInstance();
-
+        rootReference= FirebaseDatabase.getInstance().getReference();
         InitializeFields();
         alreadyAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        SendUserToTheLoginActivity();
+                        String currentUserID=mAuth.getCurrentUser().getUid();
+                        rootReference.child("User").child(currentUserID).setValue("");
+                        SendUserToTheMainActivity();
                         Toast.makeText(RegisterActivity.this,"Account Created Successfully",Toast.LENGTH_SHORT).show();
 
                     }
@@ -75,6 +80,13 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void SendUserToTheMainActivity() {
+        Intent mainIntent=new Intent(RegisterActivity.this,MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+        finish();
     }
 
 
