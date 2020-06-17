@@ -77,12 +77,16 @@ public class MainActivity extends AppCompatActivity {
                     SendUserToLoginActivity();
              }
              case R.id.main_settings_option:{
-
+                  SendUserToSettingsActivity();
              }
              default:
                  break;
 
          }
         return true;
+    }
+
+    private void SendUserToSettingsActivity() {
+        startActivity(new Intent(MainActivity.this,SettingsActivity.class));
     }
 }
