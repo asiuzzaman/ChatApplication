@@ -14,8 +14,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -44,6 +47,37 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UpdateSettings();
+            }
+        });
+
+        RetriveUserInfo();
+    }
+
+    private void RetriveUserInfo() {
+        RootRef.child("User").child(currentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if( (dataSnapshot.exists()) && (dataSnapshot.hasChild("name")) && (dataSnapshot.hasChild("image")) ){
+                    String retrivedName=dataSnapshot.child("name").getValue().toString();
+                    String retrivedStatus=dataSnapshot.child("status").getValue().toString();
+//                    String retrivedProfileImage=dataSnapshot.child("image").getValue().toString();
+                    userName.setText(retrivedName);
+                    userStatus.setText(retrivedStatus);
+                }else if((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))) {
+
+                    String retrivedName=dataSnapshot.child("name").getValue().toString();
+                    String retrivedStatus=dataSnapshot.child("status").getValue().toString();
+                    userName.setText(retrivedName);
+                    userStatus.setText(retrivedStatus);
+
+                }else{
+                    Toast.makeText(SettingsActivity.this,"Please set your name and image and status",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
